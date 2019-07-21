@@ -12,17 +12,17 @@
 static void Main(string[] args) 
 {
   Process targetProcess = Processes.GetProcessesByName("javaw")[0];
-  JProcess jni;
-  if (!JProcess.Attach(targetProcess, out jni) { 
+  JNI env;
+  if (!JNI.AttachVM(targetProcess, out env) { 
     return; //Process is not a Java process (does not have the jvm module loaded).
   }
 
-  JClass clazz = jni.FindClass("fully/qualified/Name");
-  JMethodID methodID = jni.GetStaticMethodID(clazz, "isThisAFunction", "(IZ)Z"); 
-  JBoolean boolean = jni.CallStaticBooleanMethod(clazz, methodID, new JInt(54), new JBoolean(true));
+  JClass clazz = env.FindClass("fully/qualified/Name");
+  JMethodID methodID = env.GetStaticMethodID(clazz, "isThisAFunction", "(IZ)Z"); 
+  JBoolean boolean = env.CallStaticBooleanMethod(clazz, methodID, new JInt(54), new JBoolean(true));
 
   Console.WriteLine(boolean.Value());
   
-  jni.Dispose();
+  env.Dispose();
 }
 ```

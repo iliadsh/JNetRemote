@@ -308,7 +308,7 @@ namespace JavaRemote {
 		}
 	};
 
-	public ref class JProcess {
+	public ref class JNI {
 	public:
 		JInt^ GetVersion();
 		JClass^ FindClass(String^ name); 
@@ -527,15 +527,15 @@ namespace JavaRemote {
 		IntPtr  GetDirectBufferAddress(JObject^ buf);
 		JLong^ GetDirectBufferCapacity(JObject^ buf);
 
-		static bool AttachVM(Process^ p, [OutAttribute] JProcess^% jp);
+		static bool AttachVM(Process^ p, [OutAttribute] JNI^% jp);
 	protected:
-		!JProcess() {
+		!JNI() {
 			delete _jni;
 		}
 	private:
-		JavaRemoteNative::JProcess* _jni;
-		JProcess(int processID) : _jni(new JavaRemoteNative::JProcess(processID)) {};
-		~JProcess() {
+		JavaRemoteNative::JNI* _jni;
+		JNI(int processID) : _jni(new JavaRemoteNative::JNI(processID)) {};
+		~JNI() {
 			delete _jni;
 		}
 	};

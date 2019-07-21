@@ -4,10 +4,10 @@
 #include <jni.h>
 
 namespace JavaRemoteNative {
-	class JProcess {
+	class JNI {
 	public:
-		JProcess(DWORD processID);
-		~JProcess() = default;
+		JNI(DWORD processID);
+		~JNI() = default;
 
 		jint GetVersion();
 		jclass FindClass(const char* name);
