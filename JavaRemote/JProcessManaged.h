@@ -515,21 +515,19 @@ namespace JavaRemote {
 		void  GetStringRegion(JString^ str, JInt^ start, JInt^ len, [OutAttribute] array<JChar^>^% buf);
 		void  GetStringUTFRegion(JString^ str, JInt^ start, JInt^ len, [OutAttribute] String^% buf);
 
-		/*void *  GetPrimitiveArrayCritical(JArray^ array, [OutAttribute] JBoolean^% isCopy);
-		void  ReleasePrimitiveArrayCritical(JArray^ array, void *carray, JInt^ mode);
+		IntPtr  GetPrimitiveArrayCritical(JArray^ array, [OutAttribute] JBoolean^% isCopy);
+		void  ReleasePrimitiveArrayCritical(JArray^ array, IntPtr carray, JInt^ mode);
 
-		const array<JChar^>^ GetStringCritical(JString^ string, [OutAttribute] JBoolean^% isCopy);
-		void  ReleaseStringCritical(JString^ string, String^ cstring);*/
+		array<JChar^>^ GetStringCritical(JString^ string, [OutAttribute] JBoolean^% isCopy);
+		void  ReleaseStringCritical(JString^ string, array<JChar^>^ cstring);
 
 		JBoolean^ ExceptionCheck();
 
-		/*JObject^ NewDirectByteBuffer(JNIEnv* env, void* address, JLong^ capacity);
-		void*  GetDirectBufferAddress(JNIEnv* env, JObject^ buf);
-		JLong^ GetDirectBufferCapacity(JNIEnv* env, JObject^ buf);*/
+		JObject^ NewDirectByteBuffer(IntPtr address, JLong^ capacity);
+		IntPtr  GetDirectBufferAddress(JObject^ buf);
+		JLong^ GetDirectBufferCapacity(JObject^ buf);
 
-		IntPtr GetVMPointer();
-		IntPtr GetENVPointer();
-		static bool Attach(Process^ p, [OutAttribute] JProcess^% jp);
+		static bool AttachVM(Process^ p, [OutAttribute] JProcess^% jp);
 	protected:
 		!JProcess() {
 			delete _jni;

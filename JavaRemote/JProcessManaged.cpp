@@ -846,29 +846,50 @@ void  JavaRemote::JProcess::GetStringUTFRegion(JString^ str, JInt^ start, JInt^ 
 	buf = gcnew String(cbuf);
 }
 
-/*void *  JavaRemote::JProcess::GetPrimitiveArrayCritical(JArray^ array, [OutAttribute] JBoolean^% isCopy);
-void  JavaRemote::JProcess::ReleasePrimitiveArrayCritical(JArray^ array, void *carray, JInt^ mode);
+IntPtr JavaRemote::JProcess::GetPrimitiveArrayCritical(JArray^ array, [OutAttribute] JBoolean^% isCopy) {
+	jboolean* isCCopy;
+	void* arr = _jni->GetPrimitiveArrayCritical(array->_array, isCCopy);
+	isCopy = gcnew JBoolean(*isCCopy);
+	return IntPtr(arr);
+}
+void  JavaRemote::JProcess::ReleasePrimitiveArrayCritical(JArray^ array, IntPtr carray, JInt^ mode) {
+	_jni->ReleasePrimitiveArrayCritical(array->_array, carray.ToPointer(), mode->_int);
+}
 
-const array<JavaRemote::JChar^>^ JavaRemote::JProcess::GetStringCritical(JString^ string, [OutAttribute] JBoolean^% isCopy);
-void  JavaRemote::JProcess::ReleaseStringCritical(JString^ string, String^ cstring);*/
+array<JavaRemote::JChar^>^ JavaRemote::JProcess::GetStringCritical(JString^ string, [OutAttribute] JBoolean^% isCopy) {
+	jboolean* isCCopy;
+	const jchar* arr = _jni->GetStringCritical(string->_string, isCCopy);
+	isCopy = gcnew JBoolean(*isCCopy);
+	jsize size = _jni->GetStringLength(string->_string);
+	array<JChar^>^ retarr = gcnew array<JChar^>(size);
+	for (int i = 0; i < size; i++) {
+		retarr[i] = gcnew JChar(arr[i]);
+	}
+	return retarr;
+}
+void  JavaRemote::JProcess::ReleaseStringCritical(JString^ string, array<JChar^>^ cstring) {
+	jchar* arr = new jchar[cstring->Length];
+	for (int i = 0; i < cstring->Length; i++) {
+		arr[i] = cstring[i]->Value();
+	}
+	_jni->ReleaseStringCritical(string->_string, arr);
+}
 
 JavaRemote::JBoolean^  JavaRemote::JProcess::ExceptionCheck() {
 	return gcnew JBoolean(_jni->ExceptionCheck());
 }
 
-/*JavaRemote::JObject^  JavaRemote::JProcess::NewDirectByteBuffer(JNIEnv* env, void* address, JLong^ capacity);
-void*   JavaRemote::JProcess::GetDirectBufferAddress(JNIEnv* env, JObject^ buf);
-JavaRemote::JLong^  JavaRemote::JProcess::GetDirectBufferCapacity(JNIEnv* env, JObject^ buf);*/
-
-IntPtr JavaRemote::JProcess::GetVMPointer() {
-	return IntPtr(_jni->_VM);
+JavaRemote::JObject^  JavaRemote::JProcess::NewDirectByteBuffer(IntPtr address, JLong^ capacity) {
+	return gcnew JObject(_jni->NewDirectByteBuffer(address.ToPointer(), capacity->_long));
+}
+IntPtr  JavaRemote::JProcess::GetDirectBufferAddress(JObject^ buf) {
+	return IntPtr(_jni->GetDirectBufferAddress(buf->_obj));
+}
+JavaRemote::JLong^  JavaRemote::JProcess::GetDirectBufferCapacity(JObject^ buf) {
+	return gcnew JLong(_jni->GetDirectBufferCapacity(buf->_obj));
 }
 
-IntPtr JavaRemote::JProcess::GetENVPointer() {
-	return IntPtr(_jni->_ENV);
-}
-
-bool JavaRemote::JProcess::Attach(Process^ p, [OutAttribute] JProcess^% jp) {
+bool JavaRemote::JProcess::AttachVM(Process^ p, [OutAttribute] JProcess^% jp) {
 	for each(ProcessModule^ mod in p->Modules)
 	{
 		if (mod->FileName->Contains("jvm.dll"))

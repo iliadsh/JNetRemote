@@ -1607,7 +1607,7 @@ namespace JavaRemoteNative {
 		return remoteFunction.Call(args, _WorkerThread).result();
 	}
 
-	jobject JProcess::NewDirectByteBuffer(JNIEnv* env, void* address, jlong capacity) {
+	jobject JProcess::NewDirectByteBuffer(void* address, jlong capacity) {
 		blackbone::RemoteFunction<JavaDeclarations::java_NewDirectByteBuffer> remoteFunction{ _InnerProcess, (blackbone::ptr_t)(envFuncs.NewDirectByteBuffer) };
 		decltype(remoteFunction)::CallArguments args{
 			(void*)_ENV,
@@ -1616,7 +1616,7 @@ namespace JavaRemoteNative {
 		};
 		return remoteFunction.Call(args, _WorkerThread).result();
 	}
-	void*  JProcess::GetDirectBufferAddress(JNIEnv* env, jobject buf) {
+	void*  JProcess::GetDirectBufferAddress(jobject buf) {
 		blackbone::RemoteFunction<JavaDeclarations::java_GetDirectBufferAddress> remoteFunction{ _InnerProcess, (blackbone::ptr_t)(envFuncs.GetDirectBufferAddress) };
 		decltype(remoteFunction)::CallArguments args{
 			(void*)_ENV,
@@ -1624,7 +1624,7 @@ namespace JavaRemoteNative {
 		};
 		return remoteFunction.Call(args, _WorkerThread).result();
 	}
-	jlong JProcess::GetDirectBufferCapacity(JNIEnv* env, jobject buf) {
+	jlong JProcess::GetDirectBufferCapacity(jobject buf) {
 		blackbone::RemoteFunction<JavaDeclarations::java_GetDirectBufferCapacity> remoteFunction{ _InnerProcess, (blackbone::ptr_t)(envFuncs.GetDirectBufferCapacity) };
 		decltype(remoteFunction)::CallArguments args{
 			(void*)_ENV,

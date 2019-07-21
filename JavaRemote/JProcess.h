@@ -224,16 +224,17 @@ namespace JavaRemoteNative {
 
 		jboolean ExceptionCheck();
 
-		jobject NewDirectByteBuffer(JNIEnv* env, void* address, jlong capacity);
-		void*  GetDirectBufferAddress(JNIEnv* env, jobject buf);
-		jlong GetDirectBufferCapacity(JNIEnv* env, jobject buf);
-
-		JavaVM* _VM;
-		JNIEnv* _ENV;
+		jobject NewDirectByteBuffer(void* address, jlong capacity);
+		void*  GetDirectBufferAddress(jobject buf);
+		jlong GetDirectBufferCapacity(jobject buf);
+		
 	private:
 		blackbone::Process _InnerProcess;
 		blackbone::ThreadPtr _WorkerThread;
 		blackbone::ModuleDataPtr _JVMModule;
+
+		JavaVM* _VM;
+		JNIEnv* _ENV;
 		
 		JNIInvokeInterface_ vmFuncs;
 		JNINativeInterface_ envFuncs;
